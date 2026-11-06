@@ -1,0 +1,509 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>RedBlue — Adversarial Execution Intelligence Platform</title>
+  <meta name="description" content="RedBlue protects institutional investors' competitive edge by making trade execution mathematically unpredictable to adversarial AI systems.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
+  <link rel="stylesheet" href="/static/styles.css">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='20' fill='%23000000'/><text x='50' y='65' text-anchor='middle' font-size='50' font-weight='900' fill='%2300E5FF'>R</text></svg>">
+</head>
+<body>
+  <div class="ambient-glow"></div>
+
+  <!-- Alert Banner (FR-D05) -->
+  <div class="alert-banner" id="alert-banner" style="display:none;">
+    <span class="alert-icon">⚠</span>
+    <span class="alert-text" id="alert-text">HIGH RISK: Attacker detection score exceeds threshold</span>
+    <button class="alert-dismiss" id="alert-dismiss">✕</button>
+  </div>
+
+  <!-- Sidebar Navigation -->
+  <nav id="sidebar" class="sidebar">
+    <div class="sidebar-logo">
+      <img src="/static/logo.png" alt="RedBlue Logo" style="width: 48px; height: 48px; border-radius: 8px; box-shadow: 0 0 15px rgba(0,229,255,0.3);">
+      <span class="logo-text">REDBLUE</span>
+    </div>
+    <div class="sidebar-nav">
+      <button class="nav-item active" data-section="command" id="nav-command">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+        <span>Command Center</span>
+      </button>
+      <button class="nav-item" data-section="attacker" id="nav-attacker">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
+        <span>Attacker Analysis</span>
+      </button>
+      <button class="nav-item" data-section="defender" id="nav-defender">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+        <span>Defender Engine</span>
+      </button>
+      <button class="nav-item" data-section="flow" id="nav-flow">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22,12 18,12 15,21 9,3 6,12 2,12"/></svg>
+        <span>Order Flow</span>
+      </button>
+      <button class="nav-item" data-section="intelligence" id="nav-intelligence">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+        <span>Intelligence</span>
+      </button>
+      <button class="nav-item" data-section="shadow" id="nav-shadow">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 2l-2 2m-7.61 7.61a5.5 5.5 0 1 1-7.778 7.778 5.5 5.5 0 0 1 7.777-7.777zm0 0L15.5 7.5m0 0l3 3L22 7l-3-3m-3.5 3.5L19 4"/></svg>
+        <span>Shadow Diagnostics</span>
+      </button>
+      <button class="nav-item" data-section="benchmarks" id="nav-benchmarks">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 20V10"/><path d="M12 20V4"/><path d="M6 20v-6"/></svg>
+        <span>Benchmarks</span>
+      </button>
+      <button class="nav-item" data-section="compliance" id="nav-compliance">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+        <span>Compliance Audit</span>
+      </button>
+      <button class="nav-item" data-section="audit-tool" id="nav-audit-tool">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+        <span>Audit My Trades</span>
+      </button>
+    </div>
+    <div class="sidebar-footer">
+      <div class="sim-status" id="sim-status">
+        <div class="status-dot"></div>
+        <span>SIMULATION READY</span>
+      </div>
+      <div class="sim-controls">
+        <button class="btn-primary" id="btn-start">▶ Start</button>
+        <button class="btn-secondary" id="btn-stop" disabled>■ Stop</button>
+        <button class="btn-ghost" id="btn-reset">↺ Reset</button>
+      </div>
+      <div class="speed-control">
+        <label>Speed</label>
+        <input type="range" id="speed-slider" min="0.5" max="5" step="0.5" value="1">
+        <span id="speed-label">1×</span>
+      </div>
+      <div class="aggression-control">
+        <label>Defender Aggressiveness</label>
+        <input type="range" id="aggression-slider" min="0" max="100" value="70">
+        <span id="aggression-label">70%</span>
+      </div>
+      <div class="intensity-control">
+        <label>Intensity</label>
+        <input type="range" id="intensity-slider" min="0" max="5" value="2">
+        <span id="intensity-label">L2</span>
+      </div>
+      <div class="adversarial-control" id="adversarial-control" title="Requires a trained DefenseDiscriminator (run scripts/train_and_evaluate.py)">
+        <label>
+          <input type="checkbox" id="adversarial-toggle" disabled>
+          Adversarial Defender
+        </label>
+        <span id="adversarial-label" class="adversarial-note">unavailable — model not trained</span>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Main Content -->
+  <main id="main-content" class="main-content">
+
+    <!-- ====== COMMAND CENTER ====== -->
+    <section id="section-command" class="section active">
+      <div class="section-header">
+        <h1>Command Center</h1>
+        <div class="header-badges">
+          <div id="ml-badge" class="ml-badge" style="display: none;">
+            <span class="badge-label">ML MODEL READY</span>
+            <span id="ml-accuracy-val">63.4%</span> accuracy
+          </div>
+          <p class="section-subtitle">Adversarial Execution Intelligence — Real-time Overview</p>
+        </div>
+      </div>
+
+      <!-- Alpha Leakage Ticker (FR-D03) -->
+      <div class="leakage-ticker glass-card">
+        <div class="ticker-item">
+          <span class="ticker-label">Alpha Leaked Today</span>
+          <span class="ticker-value red-glow" id="leakage-today">$0.00</span>
+        </div>
+        <div class="ticker-divider"></div>
+        <div class="ticker-item">
+          <span class="ticker-label">Per Order Avg</span>
+          <span class="ticker-value" id="leakage-per-order">$0.00</span>
+        </div>
+        <div class="ticker-divider"></div>
+        <div class="ticker-item">
+          <span class="ticker-label">Total Leakage</span>
+          <span class="ticker-value red-glow" id="leakage-total">$0.00</span>
+        </div>
+        <div class="ticker-divider"></div>
+        <div class="ticker-item">
+          <span class="ticker-label">VIX</span>
+          <span class="ticker-value" id="vix-value">—</span>
+        </div>
+        <div class="ticker-divider"></div>
+        <div class="ticker-item">
+          <span class="ticker-label">Market Regime</span>
+          <span class="ticker-value" id="regime-value">—</span>
+        </div>
+      </div>
+
+      <!-- Investor Comparison Card -->
+      <div class="investor-comparison glass-card">
+        <div class="comparison-side">
+          <span class="comp-label">WITHOUT REDBLUE</span>
+          <div class="comp-value red-text" id="comp-before-val">67%</div>
+          <span class="comp-sub">Execution readable to AI: <strong class="red-text">YES</strong></span>
+        </div>
+        <div class="comparison-arrow">→</div>
+        <div class="comparison-side">
+          <span class="comp-label">WITH REDBLUE</span>
+          <div class="comp-value blue-text" id="comp-after-val">49%</div>
+          <span class="comp-sub">Execution readable to AI: <strong class="blue-text">NO</strong></span>
+        </div>
+      </div>
+
+      <!-- Hero Metrics -->
+      <div class="hero-metrics">
+        <div class="metric-card glass-card metric-red">
+          <div class="metric-icon">⚠</div>
+          <div class="metric-value" id="hero-detection-before">—</div>
+          <div class="metric-label">Detection Score (Unprotected)</div>
+          <div class="metric-sublabel">Attacker accuracy on raw flow</div>
+        </div>
+        <div class="metric-card glass-card metric-blue">
+          <div class="metric-icon">🛡</div>
+          <div class="metric-value" id="hero-detection-after">—</div>
+          <div class="metric-label">Detection Score (Protected)</div>
+          <div class="metric-sublabel">Attacker accuracy after Defender</div>
+        </div>
+        <div class="metric-card glass-card metric-green">
+          <div class="metric-icon">↓</div>
+          <div class="metric-value" id="hero-reduction">—</div>
+          <div class="metric-label">Detection Reduction</div>
+          <div class="metric-sublabel">Signal leakage eliminated</div>
+        </div>
+        <div class="metric-card glass-card metric-purple">
+          <div class="metric-icon">⚡</div>
+          <div class="metric-value" id="hero-latency">—</div>
+          <div class="metric-label">Defender Latency</div>
+          <div class="metric-sublabel" id="hero-strategy">—</div>
+        </div>
+      </div>
+
+      <!-- Charts Row -->
+      <div class="charts-row">
+        <div class="chart-card glass-card wide">
+          <div class="chart-header">
+            <h3>Detection Score Over Time</h3>
+            <div class="chart-legend"><span class="legend-dot red"></span> Unprotected <span class="legend-dot blue"></span> Protected</div>
+          </div>
+          <canvas id="chart-detection-timeline"></canvas>
+        </div>
+        <div class="chart-card glass-card">
+          <div class="chart-header">
+            <h3>VWAP Preservation</h3>
+            <span class="badge badge-green" id="vwap-badge">Within Tolerance</span>
+          </div>
+          <canvas id="chart-vwap"></canvas>
+          <div class="chart-footer">
+            <span>Deviation: <strong id="vwap-dev-value">0.0 bps</strong></span>
+            <span>Limit: <strong>≤ 8.0 bps</strong></span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Live Feed -->
+      <div class="live-feed-card glass-card">
+        <div class="chart-header">
+          <h3>Live Order Feed</h3>
+          <span class="badge badge-pulse" id="orders-count">0 orders</span>
+        </div>
+        <div class="live-feed-table-wrap">
+          <table class="data-table" id="live-feed-table">
+            <thead><tr><th>Time</th><th>Symbol</th><th>Side</th><th>Size (Raw)</th><th>Size (Defended)</th><th>Venue (Raw)</th><th>Venue (Defended)</th><th>Modifications</th><th>LPA Token</th></tr></thead>
+            <tbody id="live-feed-body"></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- ====== ATTACKER ANALYSIS ====== -->
+    <section id="section-attacker" class="section">
+      <div class="section-header">
+        <h1>Attacker Analysis</h1>
+        <p class="section-subtitle">Pattern detection engine — Quantifying order flow readability</p>
+      </div>
+      <div class="attacker-grid">
+        <div class="chart-card glass-card">
+          <div class="chart-header"><h3>Unprotected Detection Score</h3><span class="badge badge-red">HIGH RISK</span></div>
+          <div class="gauge-container">
+            <svg class="gauge" viewBox="0 0 200 120" id="gauge-unprotected">
+              <path d="M 20 100 A 80 80 0 0 1 180 100" fill="none" stroke="rgba(255,255,255,0.08)" stroke-width="14" stroke-linecap="round"/>
+              <path d="M 20 100 A 80 80 0 0 1 180 100" fill="none" stroke="url(#gaugeGradientRed)" stroke-width="14" stroke-linecap="round" stroke-dasharray="251.3" stroke-dashoffset="251.3" id="gauge-arc-unprotected"/>
+              <defs><linearGradient id="gaugeGradientRed"><stop offset="0%" stop-color="#FF2A55"/><stop offset="100%" stop-color="#FFB300"/></linearGradient></defs>
+              <text x="100" y="85" text-anchor="middle" class="gauge-value" id="gauge-text-unprotected">—</text>
+              <text x="100" y="105" text-anchor="middle" class="gauge-sublabel">% detectable</text>
+            </svg>
+          </div>
+        </div>
+        <div class="chart-card glass-card">
+          <div class="chart-header"><h3>Protected Detection Score</h3><span class="badge badge-blue">DEFENDED</span></div>
+          <div class="gauge-container">
+            <svg class="gauge" viewBox="0 0 200 120" id="gauge-protected">
+              <path d="M 20 100 A 80 80 0 0 1 180 100" fill="none" stroke="rgba(255,255,255,0.08)" stroke-width="14" stroke-linecap="round"/>
+              <path d="M 20 100 A 80 80 0 0 1 180 100" fill="none" stroke="url(#gaugeGradientBlue)" stroke-width="14" stroke-linecap="round" stroke-dasharray="251.3" stroke-dashoffset="251.3" id="gauge-arc-protected"/>
+              <defs><linearGradient id="gaugeGradientBlue"><stop offset="0%" stop-color="#00E5FF"/><stop offset="100%" stop-color="#00FF88"/></linearGradient></defs>
+              <text x="100" y="85" text-anchor="middle" class="gauge-value" id="gauge-text-protected">—</text>
+              <text x="100" y="105" text-anchor="middle" class="gauge-sublabel">% detectable</text>
+            </svg>
+          </div>
+        </div>
+        <div class="chart-card glass-card wide">
+          <div class="chart-header"><h3>Feature Analysis — Attacker Signal Strength</h3></div>
+          <canvas id="chart-features"></canvas>
+        </div>
+      </div>
+      <div class="chart-card glass-card">
+        <div class="chart-header"><h3>Detected Patterns</h3><span class="badge badge-amber" id="patterns-count">0 patterns</span></div>
+        <div id="patterns-list" class="patterns-list"><div class="empty-state">Start simulation to detect patterns</div></div>
+      </div>
+    </section>
+
+    <!-- ====== DEFENDER ENGINE ====== -->
+    <section id="section-defender" class="section">
+      <div class="section-header">
+        <h1>Defender Engine</h1>
+        <p class="section-subtitle">Real-time obfuscation pipeline — 6 techniques, intensity L0–L5</p>
+      </div>
+      <div class="defender-grid">
+        <div class="chart-card glass-card"><div class="chart-header"><h3>Size Distribution</h3></div><canvas id="chart-size-dist"></canvas></div>
+        <div class="chart-card glass-card"><div class="chart-header"><h3>Venue Distribution</h3></div><canvas id="chart-venue-dist"></canvas></div>
+        <div class="chart-card glass-card"><div class="chart-header"><h3>Timing Distribution</h3></div><canvas id="chart-timing-dist"></canvas></div>
+        <div class="chart-card glass-card"><div class="chart-header"><h3>Entropy Comparison</h3></div><canvas id="chart-entropy"></canvas></div>
+      </div>
+      <div class="chart-card glass-card">
+        <div class="chart-header"><h3>Recent Modifications</h3></div>
+        <div class="modifications-log" id="modifications-log"><div class="empty-state">Start simulation to see modifications</div></div>
+      </div>
+    </section>
+
+    <!-- ====== ORDER FLOW MONITOR ====== -->
+    <section id="section-flow" class="section">
+      <div class="section-header">
+        <h1>Order Flow Monitor</h1>
+        <p class="section-subtitle">Side-by-side comparison — Unprotected vs Protected execution streams</p>
+      </div>
+      <div class="flow-grid">
+        <div class="chart-card glass-card"><div class="chart-header"><h3>Unprotected Order Flow</h3><span class="badge badge-red">EXPOSED</span></div><canvas id="chart-flow-unprotected"></canvas></div>
+        <div class="chart-card glass-card"><div class="chart-header"><h3>Protected Order Flow</h3><span class="badge badge-blue">DEFENDED</span></div><canvas id="chart-flow-protected"></canvas></div>
+      </div>
+      <div class="charts-row">
+        <div class="chart-card glass-card wide">
+          <div class="chart-header"><h3>Autocorrelation Comparison</h3><div class="chart-legend"><span class="legend-dot red"></span> Unprotected <span class="legend-dot blue"></span> Protected</div></div>
+          <canvas id="chart-autocorr"></canvas>
+        </div>
+      </div>
+    </section>
+
+    <!-- ====== INTELLIGENCE (NEW) ====== -->
+    <section id="section-intelligence" class="section">
+      <div class="section-header">
+        <h1>RedBlue Intelligence</h1>
+        <p class="section-subtitle">Market risk, strategy analysis, and predictability heatmap</p>
+      </div>
+
+      <!-- Market Risk Panel (FR-D04) -->
+      <div class="hero-metrics">
+        <div class="metric-card glass-card" title="Chicago Board Options Exchange Volatility Index. High values indicate market stress."><div class="metric-icon">📊</div><div class="metric-value" id="intel-vix">—</div><div class="metric-label">VIX Level</div><div class="metric-sublabel" id="intel-vix-regime">—</div></div>
+        <div class="metric-card glass-card" title="Proprietary index measuring predatory algorithmic trading presence in the order book."><div class="metric-icon">🤖</div><div class="metric-value" id="intel-hft">—</div><div class="metric-label">HFT Activity Score</div><div class="metric-sublabel">Adversarial pressure index</div></div>
+        <div class="metric-card glass-card" title="The probability that the current execution is suffering from information leakage based on order book imbalance."><div class="metric-icon">⚡</div><div class="metric-value" id="intel-adverse">—</div><div class="metric-label">Adverse Selection</div><div class="metric-sublabel">Probability of information leakage</div></div>
+        <div class="metric-card glass-card"><div class="metric-icon">🔒</div><div class="metric-value" id="intel-intensity">—</div><div class="metric-label">Recommended Intensity</div><div class="metric-sublabel" id="intel-session">—</div></div>
+      </div>
+
+      <!-- Strategy Comparison (FR-D08) -->
+      <div class="charts-row">
+        <div class="chart-card glass-card">
+          <div class="chart-header"><h3>Strategy Comparison — Detection by Type</h3></div>
+          <canvas id="chart-strategy"></canvas>
+        </div>
+        <div class="chart-card glass-card">
+          <div class="chart-header"><h3>Obfuscation Effectiveness</h3></div>
+          <canvas id="chart-effectiveness"></canvas>
+        </div>
+        <div class="chart-card glass-card">
+          <div class="chart-header"><h3>Alpha Leakage Cost Trend</h3></div>
+          <canvas id="chart-leakage-trend"></canvas>
+        </div>
+      </div>
+
+      <!-- Predictability Heatmap (FR-D07) -->
+      <div class="chart-card glass-card">
+        <div class="chart-header"><h3>Predictability Heatmap — Time × Size</h3><span class="badge badge-amber">Detection Accuracy Grid</span></div>
+        <canvas id="chart-heatmap" height="200"></canvas>
+      </div>
+
+      <!-- Live Market Prices -->
+      <div class="chart-card glass-card">
+        <div class="chart-header"><h3>Tracked Symbols — Live Prices</h3><span class="badge badge-pulse" id="market-source">Loading...</span></div>
+        <div class="live-feed-table-wrap">
+          <table class="data-table" id="market-table">
+            <thead><tr><th>Symbol</th><th>Price</th><th>Volatility</th><th>Momentum 1H</th><th>Data Source</th></tr></thead>
+            <tbody id="market-body"></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- ====== SHADOW DIAGNOSTICS (NEW) ====== -->
+    <section id="section-shadow" class="section">
+      <div class="section-header">
+        <h1>Shadow Diagnostics</h1>
+        <p class="section-subtitle">Execution Vulnerability Scan & Competitor Exploitation Simulation</p>
+      </div>
+
+      <div class="charts-row">
+        <!-- Terminal Column -->
+        <div class="chart-card glass-card" style="background: #000; border-color: rgba(0, 229, 255, 0.3);">
+          <div class="chart-header" style="margin-bottom: 8px;">
+            <h3 style="color: #00E5FF; font-family: var(--font-mono); font-size: 0.9rem;">> terminal@redblue-os</h3>
+            <button class="btn-primary btn-sm" id="btn-run-scan" style="padding: 4px 12px; font-size: 0.75rem;">Run Deep Scan</button>
+          </div>
+          <div id="shadow-terminal" class="terminal-output" style="height: 300px; overflow-y: auto; font-family: var(--font-mono); font-size: 0.85rem; color: #00E676; padding-top: 12px;">
+            <div style="color: var(--text-muted);">Awaiting scan initialization...</div>
+          </div>
+        </div>
+
+        <!-- Vulnerability Report Column -->
+        <div class="chart-card glass-card shadow-report-card">
+          <div class="chart-header">
+            <h3>Vulnerability Report</h3>
+            <span class="badge badge-pulse" id="shadow-status-badge">STANDBY</span>
+          </div>
+          
+          <div id="shadow-report-content" style="opacity: 0.3; pointer-events: none; transition: opacity 0.5s;">
+            <div class="metric-card glass-card metric-red" style="padding: 16px; margin-bottom: 16px;">
+              <div class="metric-label">Detected Strategy</div>
+              <div class="metric-value" id="shadow-strategy" style="font-size: 1.5rem;">—</div>
+              <div class="metric-sublabel">Adversarial Confidence: <strong id="shadow-confidence" class="text-red">—</strong></div>
+            </div>
+
+            <div class="metric-card glass-card metric-amber" style="padding: 16px; margin-bottom: 16px;">
+              <div class="metric-label">Estimated Leakage Cost</div>
+              <div class="metric-value text-amber" id="shadow-bot" style="font-size: 1.2rem; color: var(--accent-amber); font-family: var(--font-mono);">—</div>
+              <div class="metric-sublabel">Per order, from a calibrated model — not a live/observed fill: <strong id="shadow-impact" class="text-red">—</strong></div>
+            </div>
+
+            <div class="metric-card glass-card metric-blue" style="padding: 16px; background: rgba(0, 229, 255, 0.05); border-color: rgba(0, 229, 255, 0.4);">
+              <div class="metric-label" style="color: var(--accent-cyan);">Recommended Action</div>
+              <div class="metric-value" id="shadow-cure" style="font-size: 1.1rem; margin: 8px 0; font-family: var(--font-sans);">—</div>
+              <div class="metric-sublabel" style="margin-bottom: 12px;" id="shadow-savings-label">—</div>
+              <button class="btn-primary" id="btn-deploy-cure" style="width: 100%; box-shadow: 0 0 15px rgba(0, 229, 255, 0.4);">DEPLOY</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ====== BENCHMARKS ====== -->
+    <section id="section-benchmarks" class="section">
+      <div class="section-header"><h1>Benchmarks</h1><p class="section-subtitle">Performance metrics — Target metrics vs simulation results</p></div>
+      <div class="benchmark-grid">
+        <div class="benchmark-card glass-card"><div class="benchmark-header"><h4>Defender Latency</h4><span class="benchmark-target">Target: &lt; 1.5ms</span></div><div class="benchmark-value" id="bench-latency-mean">—</div><div class="benchmark-sub">Mean latency</div><div class="benchmark-bar"><div class="benchmark-fill green" id="bench-latency-bar" style="width:0%"></div></div><div class="benchmark-details"><span>P50: <strong id="bench-latency-p50">—</strong></span><span>P95: <strong id="bench-latency-p95">—</strong></span><span>P99: <strong id="bench-latency-p99">—</strong></span></div></div>
+        <div class="benchmark-card glass-card"><div class="benchmark-header"><h4>VWAP Preservation</h4><span class="benchmark-target">Target: ≤ 8 bps</span></div><div class="benchmark-value" id="bench-vwap-mean">—</div><div class="benchmark-sub">Mean deviation</div><div class="benchmark-bar"><div class="benchmark-fill blue" id="bench-vwap-bar" style="width:0%"></div></div><div class="benchmark-details"><span>Max: <strong id="bench-vwap-max">—</strong></span><span>In Tolerance: <strong id="bench-vwap-pct">—</strong></span></div></div>
+        <div class="benchmark-card glass-card"><div class="benchmark-header"><h4>Detection Reduction</h4><span class="benchmark-target">Target: &gt; 80%</span></div><div class="benchmark-value" id="bench-det-reduction">—</div><div class="benchmark-sub">Signal leakage eliminated</div><div class="benchmark-bar"><div class="benchmark-fill purple" id="bench-det-bar" style="width:0%"></div></div><div class="benchmark-details"><span>Before: <strong id="bench-det-before">—</strong></span><span>After: <strong id="bench-det-after">—</strong></span></div></div>
+        <div class="benchmark-card glass-card"><div class="benchmark-header"><h4>Compliance Rate</h4><span class="benchmark-target">Target: 100%</span></div><div class="benchmark-value" id="bench-compliance">—</div><div class="benchmark-sub">LPA tokens generated</div><div class="benchmark-bar"><div class="benchmark-fill green" id="bench-compliance-bar" style="width:0%"></div></div><div class="benchmark-details"><span>Total LPAs: <strong id="bench-lpa-count">—</strong></span><span>All Compliant: <strong id="bench-all-compliant">—</strong></span></div></div>
+        <div class="benchmark-card glass-card"><div class="benchmark-header"><h4>Entropy Increase</h4><span class="benchmark-target">Target: > 0.85</span></div><div class="benchmark-value" id="bench-entropy">—</div><div class="benchmark-sub">Post-defense entropy</div><div class="benchmark-bar"><div class="benchmark-fill amber" id="bench-entropy-bar" style="width:0%"></div></div><div class="benchmark-details"><span>Before: <strong id="bench-entropy-before">—</strong></span><span>After: <strong id="bench-entropy-after">—</strong></span></div></div>
+        <div class="benchmark-card glass-card"><div class="benchmark-header"><h4>Orders Processed</h4><span class="benchmark-target">Throughput</span></div><div class="benchmark-value" id="bench-orders">—</div><div class="benchmark-sub">Total child orders</div><div class="benchmark-bar"><div class="benchmark-fill cyan" id="bench-orders-bar" style="width:0%"></div></div><div class="benchmark-details"><span>Defended: <strong id="bench-defended-count">—</strong></span><span>Modifications: <strong id="bench-mod-count">—</strong></span></div></div>
+      </div>
+    </section>
+
+    <!-- ====== COMPLIANCE AUDIT ====== -->
+    <section id="section-compliance" class="section">
+      <div class="section-header"><h1>Compliance Audit Trail</h1><p class="section-subtitle">LPA (Legal Pre-Approval) tokens — Complete modification audit log</p></div>
+      <div class="compliance-stats">
+        <div class="stat-pill green"><span class="stat-label">Total LPAs</span><span class="stat-value" id="comp-total">0</span></div>
+        <div class="stat-pill green"><span class="stat-label">Compliant</span><span class="stat-value" id="comp-compliant">0</span></div>
+        <div class="stat-pill blue"><span class="stat-label">Avg Latency</span><span class="stat-value" id="comp-latency">—</span></div>
+        <div class="stat-pill purple"><span class="stat-label">Max VWAP Dev</span><span class="stat-value" id="comp-max-dev">—</span></div>
+      </div>
+      <div class="chart-card glass-card">
+        <div class="chart-header"><h3>Audit Log</h3><button class="btn-ghost btn-sm" id="btn-export-audit">Export CSV</button></div>
+        <div class="audit-log-wrap">
+          <table class="data-table" id="audit-table">
+            <thead><tr><th>#</th><th>Timestamp</th><th>LPA Token</th><th>VWAP Dev</th><th>Modifications</th><th>Latency</th><th>LPA Score</th><th>Status</th></tr></thead>
+            <tbody id="audit-body"></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- ====== AUDIT MY TRADES ====== -->
+    <section id="section-audit-tool" class="section">
+      <div class="section-header">
+        <h1>Alpha Audit Tool</h1>
+        <p class="section-subtitle">Upload your trade logs to quantify your vulnerability to adversarial AI</p>
+      </div>
+
+      <div class="charts-row">
+        <div class="chart-card glass-card wide">
+          <div class="audit-upload-box" id="audit-upload-box">
+            <div class="upload-icon">📁</div>
+            <h3>Drop your CSV here</h3>
+            <p>Supported columns: timestamp, symbol, side, size, price, venue</p>
+            <input type="file" id="audit-file-input" style="display: none;" accept=".csv">
+            <div class="audit-actions" style="display: flex; flex-direction: column; align-items: center; gap: 16px;">
+                <button class="btn-primary" onclick="document.getElementById('audit-file-input').click()">Select File</button>
+                <div class="sample-downloads" style="display: flex; align-items: center; gap: 12px; font-size: 0.85rem; color: var(--text-muted);">
+                    <span>One-Click Samples:</span>
+                    <button class="btn-sample" onclick="runSampleAnalysis('vulnerable_trades.csv')" style="background: none; border: none; color: var(--accent-red); cursor: pointer; border-bottom: 1px dashed var(--accent-red); padding: 0; font-size: 0.85rem;">Vulnerable.csv</button>
+                    <button class="btn-sample" onclick="runSampleAnalysis('protected_trades.csv')" style="background: none; border: none; color: var(--accent-cyan); cursor: pointer; border-bottom: 1px dashed var(--accent-cyan); padding: 0; font-size: 0.85rem;">Protected.csv</button>
+                </div>
+            </div>
+          </div>
+          
+          <div id="audit-loading" style="display: none; text-align: center; padding: 40px;">
+            <div class="spinner"></div>
+            <p>Analyzing execution patterns...</p>
+          </div>
+
+          <div id="audit-results" class="audit-results-panel" style="display: none;">
+            <div class="hero-metrics">
+              <div class="metric-card glass-card metric-red">
+                <div class="metric-value" id="audit-score">—</div>
+                <div class="metric-label">Detection Score</div>
+              </div>
+              <div class="metric-card glass-card" id="audit-risk-card">
+                <div class="metric-value" id="audit-risk">—</div>
+                <div class="metric-label">Risk Level</div>
+              </div>
+              <div class="metric-card glass-card metric-green">
+                <div class="metric-value" id="audit-leakage">—</div>
+                <div class="metric-label">Est. Annual Leakage</div>
+              </div>
+            </div>
+            
+            <div class="audit-details-grid">
+              <div class="audit-detail-item">
+                <h4>Detected Strategy</h4>
+                <p id="audit-strategy">—</p>
+              </div>
+              <div class="audit-detail-item">
+                <h4>Key Vulnerabilities</h4>
+                <ul id="audit-patterns" class="patterns-list-simple"></ul>
+              </div>
+              <div class="audit-detail-item">
+                <h4>GroupKFold-Validated Model</h4>
+                <p id="audit-validated-model">—</p>
+              </div>
+            </div>
+            
+            <div class="audit-cta">
+                <p id="audit-message"></p>
+                <button class="btn-primary" onclick="window.location.href='/demo'">Learn How to Protect Your Alpha</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script src="/static/app.js"></script>
+</body>
+</html>

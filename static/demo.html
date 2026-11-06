@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RedBlue — Institutional Execution Shield</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #06080b;
+            --accent: #00E5FF;
+            --text: #ffffff;
+            --text-muted: #8E99A8;
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+        .hero {
+            padding: 120px 20px 80px;
+            max-width: 1200px;
+            margin: 0 auto;
+            text-align: center;
+        }
+        .badge {
+            background: rgba(0, 229, 255, 0.1);
+            color: var(--accent);
+            padding: 8px 16px;
+            border-radius: 100px;
+            font-size: 0.8rem;
+            font-weight: 700;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            margin-bottom: 24px;
+            display: inline-block;
+            border: 1px solid rgba(0, 229, 255, 0.3);
+        }
+        h1 {
+            font-size: 4rem;
+            font-weight: 800;
+            letter-spacing: -2px;
+            line-height: 1.1;
+            margin-bottom: 24px;
+            background: linear-gradient(to bottom, #fff 40%, rgba(255,255,255,0.5));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .hero p {
+            font-size: 1.25rem;
+            color: var(--text-muted);
+            max-width: 700px;
+            margin: 0 auto 40px;
+        }
+        .cta-group {
+            display: flex;
+            gap: 16px;
+            justify-content: center;
+        }
+        .btn {
+            padding: 16px 32px;
+            border-radius: 8px;
+            font-weight: 700;
+            text-decoration: none;
+            transition: 0.2s;
+        }
+        .btn-primary {
+            background: var(--accent);
+            color: #000;
+            box-shadow: 0 0 30px rgba(0, 229, 255, 0.3);
+        }
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 0 40px rgba(0, 229, 255, 0.5);
+        }
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 32px;
+            max-width: 1000px;
+            margin: 80px auto;
+            padding: 0 20px;
+        }
+        .stat-card {
+            background: rgba(255,255,255,0.03);
+            border: 1px solid rgba(255,255,255,0.08);
+            padding: 40px;
+            border-radius: 16px;
+            text-align: center;
+        }
+        .stat-value {
+            font-size: 2.5rem;
+            font-weight: 800;
+            color: var(--accent);
+            margin-bottom: 8px;
+            font-family: 'JetBrains Mono', monospace;
+        }
+        .stat-label {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        .dashboard-preview {
+            max-width: 1200px;
+            margin: 0 auto 120px;
+            padding: 0 20px;
+        }
+        .preview-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 24px;
+        }
+        .iframe-wrap {
+            width: 100%;
+            height: 800px;
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 40px 100px rgba(0,0,0,0.5);
+        }
+        iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+        footer {
+            padding: 80px 20px;
+            text-align: center;
+            border-top: 1px solid rgba(255,255,255,0.05);
+            color: var(--text-muted);
+            font-size: 0.9rem;
+        }
+        .glow {
+            position: fixed;
+            top: 0; left: 50%;
+            transform: translateX(-50%);
+            width: 100%; height: 100%;
+            background: radial-gradient(circle at 50% 0%, rgba(0, 229, 255, 0.05) 0%, transparent 70%);
+            pointer-events: none;
+            z-index: -1;
+        }
+    </style>
+</head>
+<body>
+    <div class="glow"></div>
+    <section class="hero">
+        <h1>Adversarial AI that makes your trade execution invisible.</h1>
+        <p>RedBlue detects predatory HFT patterns and prescribes real-time obfuscation to protect institutional alpha.</p>
+        <div class="cta-group">
+            <a href="#demo" class="btn btn-primary">Watch Live Demo</a>
+            <a href="/" class="btn" style="border: 1px solid rgba(255,255,255,0.2);">Explore Technical Dashboard</a>
+        </div>
+    </section>
+
+    <section class="stats">
+        <div class="stat-card">
+            <div class="stat-value">Simulated</div>
+            <div class="stat-label">Synthetic order flow (see /api/health for data source)</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-value">GroupKFold</div>
+            <div class="stat-label">Discriminator AUC, no train/test leakage across a parent order</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-value">p50 / p99</div>
+            <div class="stat-label">Measured defense latency, live in dashboard</div>
+        </div>
+    </section>
+
+    <section id="demo" class="dashboard-preview">
+        <div class="preview-header">
+            <h2>Real-time Simulation Engine</h2>
+            <span style="color: var(--text-muted); font-size: 0.9rem;">AAPL/MSFT/NVDA — live via yfinance where available, synthetic fallback otherwise</span>
+        </div>
+        <div class="iframe-wrap">
+            <iframe src="/"></iframe>
+        </div>
+    </section>
+
+    <footer>
+        <p>&copy; 2026 RedBlue AI. Institutional Execution Intelligence.</p>
+    </footer>
+</body>
+</html>
